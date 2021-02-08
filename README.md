@@ -64,11 +64,11 @@ Private channels require authentication and start with the prefix **private-**. 
 You will need to set up an authentication endpoint that returns a token using the `auth(...)` method if the user is allowed to subscribe to the channel. For example:
 
 ```ruby
-radar = PushRadar::Client.new('sk_fdcaf6a6-bf6f-4dea-9406-16320cca95e6')
+radar = PushRadar::Client.new('your-secret-key')
 channel_name = params[:channelName]
 # is user allowed to access channel?
 if true
-      return {'token': radar.auth(channel_name)}.to_json
+  return {'token': radar.auth(channel_name)}.to_json
 end
 ```
 
