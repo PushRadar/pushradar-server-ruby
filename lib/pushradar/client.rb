@@ -32,7 +32,7 @@ module PushRadar
       if response[:status] === 200
         true
       else
-        raise PushRadar::Error, 'An error occurred while calling the API. Server returned: ' + response[:body].to_json
+        raise PushRadar::Error, 'An error occurred while calling the API. Server returned: ' + response[:body]
       end
     end
 
@@ -49,7 +49,7 @@ module PushRadar
       if response[:status] === 200
          JSON(response[:body])['token']
       else
-        raise PushRadar::Error, 'There was a problem receiving a channel authentication token. Server returned: ' + response[:body].to_json
+        raise PushRadar::Error, 'There was a problem receiving a channel authentication token. Server returned: ' + response[:body]
       end
     end
 
