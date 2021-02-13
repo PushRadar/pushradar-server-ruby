@@ -42,7 +42,7 @@ Alterntively, install manually by running `$ gem install pushradar`
 require 'pushradar'
 
 radar = PushRadar::Client.new('your-secret-key')
-radar.broadcast('channel-1', {message: 'Hello world!'})
+radar.broadcast('channel-1', { message: 'Hello world!' })
 ```
 
 ## Receiving Messages
@@ -66,9 +66,10 @@ You will need to set up an authentication endpoint that returns a token using th
 ```ruby
 radar = PushRadar::Client.new('your-secret-key')
 channel_name = params[:channelName]
+socket_id = params[:socketID]
 # is user allowed to access channel?
 if true
-  return {'token': radar.auth(channel_name)}.to_json
+  return { 'token': radar.auth(channel_name, socket_id) }.to_json
 end
 ```
 
@@ -84,5 +85,5 @@ Complete documentation for PushRadar's Ruby server library can be found at: <htt
 
 ## License
 
-Copyright 2021, PushRadar. PushRadar's Ruby server library is licensed under the MIT license:
-http://www.opensource.org/licenses/mit-license.php
+Copyright © 2021, PushRadar. PushRadar's Ruby server library is licensed under the MIT license:
+<https://opensource.org/licenses/mit-license.php>
