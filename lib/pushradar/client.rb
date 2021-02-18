@@ -5,7 +5,11 @@ require 'cgi'
 module PushRadar
   class Client
     def initialize(secret_key)
-      unless secret_key.is_a?(String) && secret_key.start_with?('sk_')
+      unless secret_key.is_a?(String)
+        raise PushRadar::Error, 'Secret key must be a string.'
+      end
+
+      unless secret_key.start_with?('sk_')
         raise PushRadar::Error, 'Please provide your PushRadar secret key. You can find it on the API page of your dashboard.'
       end
 
@@ -22,12 +26,16 @@ module PushRadar
     end
 
     def broadcast(channel_name, data)
+      unless channel_name.is_a?(String)
+        raise PushRadar::Error, 'Channel name must be a string.'
+      end
+
       if channel_name.nil? || channel_name.strip.empty?
         raise PushRadar::Error, 'Channel name empty. Please provide a channel name.'
       end
 
       validate_channel_name(channel_name)
-      response = do_http_request('POST', @api_endpoint + "/broadcasts", { channel: channel_name.strip, data: data.to_json })
+      response = do_http_request('POST', @api_endpoint + "/broadcasts", { channel: channel_name, data: data.to_json })
 
       if response[:status] === 200
         true
@@ -37,12 +45,20 @@ module PushRadar
     end
 
     def auth(channel_name, socket_id)
+      unless channel_name.is_a?(String)
+        raise PushRadar::Error, 'Channel name must be a string.'
+      end
+
       if channel_name.nil? || channel_name.strip.empty?
         raise PushRadar::Error, 'Channel name empty. Please provide a channel name.'
       end
 
       unless channel_name.start_with?('private-')
         raise PushRadar::Error, 'Channel authentication can only be used with private channels.'
+      end
+
+      unless socket_id.is_a?(String)
+        raise PushRadar::Error, 'Socket ID must be a string.'
       end
 
       if socket_id.nil? || socket_id.strip.empty?
