@@ -27,7 +27,7 @@ module PushRadar
       end
 
       validate_channel_name(channel_name)
-      response = do_http_request('POST', @api_endpoint + "/broadcasts", { channel: channel_name.strip, data: data })
+      response = do_http_request('POST', @api_endpoint + "/broadcasts", { channel: channel_name.strip, data: data.to_json })
 
       if response[:status] === 200
         true
