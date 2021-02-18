@@ -27,7 +27,7 @@ module PushRadar
       end
 
       validate_channel_name(channel_name)
-      response = do_http_request('POST', @api_endpoint + "/broadcasts", { channel: channel_name.strip, data: data })
+      response = do_http_request('POST', @api_endpoint + "/broadcasts", { channel: channel_name.strip, data: data.to_json })
 
       if response[:status] === 200
         true
@@ -36,7 +36,7 @@ module PushRadar
       end
     end
 
-    def auth(channel_name)
+    def auth(channel_name, socket_id)
       if channel_name.nil? || channel_name.strip.empty?
         raise PushRadar::Error, 'Channel name empty. Please provide a channel name.'
       end
@@ -45,7 +45,11 @@ module PushRadar
         raise PushRadar::Error, 'Channel authentication can only be used with private channels.'
       end
 
-      response = do_http_request('GET', @api_endpoint + "/channels/auth?channel=" + CGI.escape(channel_name), {})
+      if socket_id.nil? || socket_id.strip.empty?
+        raise PushRadar::Error, 'Socket ID empty. Please pass through a socket ID.'
+      end
+
+      response = do_http_request('GET', @api_endpoint + "/channels/auth?channel=" + CGI.escape(channel_name) + "&socketID=" + CGI.escape(socket_id), {})
       if response[:status] === 200
          JSON(response[:body])['token']
       else
