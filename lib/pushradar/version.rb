@@ -1,3 +1,3 @@
 module PushRadar
-  VERSION = '3.0.0-alpha.1'
+  VERSION = '3.0.0'
 end
