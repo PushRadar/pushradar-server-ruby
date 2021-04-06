@@ -53,8 +53,8 @@ module PushRadar
         raise PushRadar::Error, 'Channel name empty. Please provide a channel name.'
       end
 
-      unless channel_name.start_with?('private-')
-        raise PushRadar::Error, 'Channel authentication can only be used with private channels.'
+      unless channel_name.start_with?('private-') || channel_name.start_with?('presence-')
+        raise PushRadar::Error, 'Channel authentication can only be used with private and presence channels.'
       end
 
       unless socket_id.is_a?(String)
@@ -67,9 +67,27 @@ module PushRadar
 
       response = do_http_request('GET', @api_endpoint + "/channels/auth?channel=" + CGI.escape(channel_name) + "&socketID=" + CGI.escape(socket_id), {})
       if response[:status] === 200
-         JSON(response[:body])['token']
+        JSON(response[:body])['token']
       else
         raise PushRadar::Error, 'There was a problem receiving a channel authentication token. Server returned: ' + response[:body]
+      end
+    end
+
+    def register_client_data(socket_id, client_data)
+      unless socket_id.is_a?(String)
+        raise PushRadar::Error, 'Socket ID must be a string.'
+      end
+
+      if socket_id.nil? || socket_id.strip.empty?
+        raise PushRadar::Error, 'Socket ID empty. Please pass through a socket ID.'
+      end
+
+      response = do_http_request('POST', @api_endpoint + "/client-data", { socketID: socket_id, clientData: client_data.to_json })
+
+      if response[:status] === 200
+        true
+      else
+        raise PushRadar::Error, 'An error occurred while calling the API. Server returned: ' + response[:body]
       end
     end
 
